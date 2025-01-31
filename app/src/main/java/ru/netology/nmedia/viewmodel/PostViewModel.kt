@@ -70,8 +70,26 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = edited.value?.copy(content = text)
     }
 
-    fun likeById(id: Long) {
-        thread { repository.likeById(id) }
+    fun likeById(post : Post) {
+        thread {
+            try {
+                val updatedPost = if (post.likedByMe) {
+                    repository.unlikeById(post.id)
+                } else {
+                    repository.likeById(post.id)
+                }
+                val updatedPosts = _data.value?.posts?.map {
+                    if (it.id == updatedPost.id) {
+                        updatedPost
+                    } else {
+                        it
+                    }
+                }
+                _data.postValue(_data.value?.copy(posts = updatedPosts.orEmpty()))
+            } catch (e: Exception) {
+                _data.postValue(FeedModel(error = true))
+            }
+        }
     }
 
     fun removeById(id: Long) {
