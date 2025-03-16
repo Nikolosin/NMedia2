@@ -3,6 +3,7 @@ package ru.netology.nmedia.repository
 import ru.netology.nmedia.dto.Post
 
 interface PostRepository {
+
     fun getAll(callBack: CallBack<List<Post>>)
     fun likeById(id: Long, callBack: CallBack<Post>)
     fun unlikeById(id: Long, callBack: CallBack<Post>)
@@ -14,5 +15,4 @@ interface CallBack<T> {
 
     fun onSuccess (data: T)
     fun error (error: Throwable)
-
 }
